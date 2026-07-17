@@ -74,9 +74,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF7C3AED),
-              Color(0xFF6D28D9),
-              Color(0xFF5B21B6),
+              Color(0xFF0F172A),
+              Color(0xFF1E293B),
+              Color(0xFF334155),
             ],
           ),
         ),
@@ -94,20 +94,22 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                       width: 120,
                       height: 120,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
+                        ),
                         borderRadius: BorderRadius.circular(30),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
+                            color: const Color(0xFF8B5CF6).withOpacity(0.4),
+                            blurRadius: 30,
+                            offset: const Offset(0, 15),
                           ),
                         ],
                       ),
                       child: const Icon(
                         Icons.confirmation_number_rounded,
                         size: 60,
-                        color: Color(0xFF7C3AED),
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 32),
@@ -123,11 +125,11 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
+                    Text(
                       'Voucher Generator',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white70,
+                        color: Colors.grey.shade400,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -138,11 +140,12 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                       constraints: const BoxConstraints(maxWidth: 400),
                       padding: const EdgeInsets.all(32),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: const Color(0xFF1E293B),
                         borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: const Color(0xFF334155)),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withOpacity(0.3),
                             blurRadius: 30,
                             offset: const Offset(0, 15),
                           ),
@@ -156,7 +159,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1F2937),
+                              color: Colors.white,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -165,7 +168,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             'Please enter your access key to continue',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey.shade600,
+                              color: Colors.grey.shade400,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -180,23 +183,25 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                               fontSize: 18,
                               letterSpacing: 2,
                               fontWeight: FontWeight.w600,
+                              color: Colors.white,
                             ),
                             decoration: InputDecoration(
                               hintText: '••••••••',
-                              prefixIcon: const Icon(Icons.key, color: Color(0xFF7C3AED)),
+                              hintStyle: TextStyle(color: Colors.grey.shade600),
+                              prefixIcon: const Icon(Icons.key, color: Color(0xFF8B5CF6)),
                               filled: true,
-                              fillColor: const Color(0xFFF3F4F6),
+                              fillColor: const Color(0xFF0F172A),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16),
-                                borderSide: BorderSide.none,
+                                borderSide: const BorderSide(color: Color(0xFF334155)),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16),
-                                borderSide: BorderSide(color: Colors.grey.shade200, width: 2),
+                                borderSide: const BorderSide(color: Color(0xFF334155), width: 1.5),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(color: Color(0xFF7C3AED), width: 2),
+                                borderSide: const BorderSide(color: Color(0xFF8B5CF6), width: 2),
                               ),
                               contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                             ),
@@ -210,8 +215,8 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                             child: FilledButton(
                               onPressed: _isLoading ? null : _login,
                               style: FilledButton.styleFrom(
-                                backgroundColor: const Color(0xFF7C3AED),
-                                disabledBackgroundColor: Colors.grey.shade300,
+                                backgroundColor: const Color(0xFF8B5CF6),
+                                disabledBackgroundColor: const Color(0xFF334155),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
@@ -253,20 +258,20 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                       'Secured Access System',
                       style: TextStyle(
                         fontSize: 12,
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.grey.shade500,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.shield, size: 16, color: Colors.white.withOpacity(0.7)),
+                        Icon(Icons.shield, size: 16, color: Colors.grey.shade500),
                         const SizedBox(width: 6),
                         Text(
                           'Protected by WiFiSekre.net',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.grey.shade500,
                           ),
                         ),
                       ],
