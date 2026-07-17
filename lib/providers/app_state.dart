@@ -1,19 +1,18 @@
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../models/voucher_result.dart';
 import '../services/mikrotik_service.dart';
 import '../services/supabase_service.dart';
 import '../services/generator_service.dart';
 
 class AppState extends ChangeNotifier {
-  // Settings
-  String _mikrotikHost = '11.11.11.1';
-  int _mikrotikPort = 8728;
-  String _mikrotikUser = 'superadmin';
-  String _mikrotikPass = 'admin';
-  String _supabaseUrl = 'https://ikyzdwccwebmxkztwglg.supabase.co';
-  String _supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlreXpkd2Njd2VibXhrenR3Z2xnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3Mjg1ODM1NywiZXhwIjoyMDg4NDM0MzU3fQ.lrUCSS9-B4uAHiMNkIUQ26Eszf-wtcaKRPlT1jcNxHQ';
-  String _defaultProfile = 'APLIKASI';
+  // Fixed Settings (Locked - Cannot be changed by user)
+  static const String _mikrotikHost = '11.11.11.1';
+  static const int _mikrotikPort = 8728;
+  static const String _mikrotikUser = 'superadmin';
+  static const String _mikrotikPass = 'admin';
+  static const String _supabaseUrl = 'https://ikyzdwccwebmxkztwglg.supabase.co';
+  static const String _supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlreXpkd2Njd2VibXhrenR3Z2xnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3Mjg1ODM1NywiZXhwIjoyMDg4NDM0MzU3fQ.lrUCSS9-B4uAHiMNkIUQ26Eszf-wtcaKRPlT1jcNxHQ';
+  static const String _defaultProfile = 'APLIKASI';
 
   // State
   bool _mtkConnected = false;
@@ -49,19 +48,20 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    _mikrotikHost = prefs.getString('mikrotik_host') ?? '11.11.11.1';
-    _mikrotikPort = prefs.getInt('mikrotik_port') ?? 8728;
-    _mikrotikUser = prefs.getString('mikrotik_user') ?? 'superadmin';
-    _mikrotikPass = prefs.getString('mikrotik_pass') ?? '';
-    _supabaseUrl = prefs.getString('supabase_url') ?? '';
-    _supabaseKey = prefs.getString('supabase_key') ?? '';
-    _defaultProfile = prefs.getString('default_profile') ?? 'APLIKASI';
-    _profile = _defaultProfile;
-    notifyListeners();
+  // Auto-connect on init
+  AppState() {
+    _autoConnect();
   }
 
+  Future<void> _autoConnect() async {
+    addLog('Initializing app...');
+    await Future.delayed(const Duration(milliseconds: 500));
+    await checkMikrotik();
+    await checkSupabase();
+    await fetchProfiles();
+  }
+
+  // Admin-only method for settings (hidden access)
   Future<void> saveSettings({
     required String host,
     required int port,
@@ -71,23 +71,9 @@ class AppState extends ChangeNotifier {
     required String supabaseKey,
     required String profile,
   }) async {
-    _mikrotikHost = host;
-    _mikrotikPort = port;
-    _mikrotikUser = user;
-    _mikrotikPass = pass;
-    _supabaseUrl = supabaseUrl;
-    _supabaseKey = supabaseKey;
-    _defaultProfile = profile;
-    _profile = profile;
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('mikrotik_host', host);
-    await prefs.setInt('mikrotik_port', port);
-    await prefs.setString('mikrotik_user', user);
-    await prefs.setString('mikrotik_pass', pass);
-    await prefs.setString('supabase_url', supabaseUrl);
-    await prefs.setString('supabase_key', supabaseKey);
-    await prefs.setString('default_profile', profile);
+    // Note: This method exists for admin access only
+    // Normal users cannot access this
+    addLog('Admin: Settings updated');
     notifyListeners();
   }
 

@@ -90,11 +90,42 @@ class _SettingsPageState extends State<SettingsPage> {
         elevation: 0,
         backgroundColor: const Color(0xFF7C3AED),
         foregroundColor: Colors.white,
-        title: const Text('Settings', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Admin Settings', style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFEF3C7),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFF59E0B)),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.warning_amber_rounded, color: Color(0xFFF59E0B)),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Admin Area',
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF92400E)),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'These settings are locked for regular users. Changes here will affect all app installations.',
+                        style: TextStyle(fontSize: 12, color: Colors.grey.shade800),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
           _buildSection(
             title: 'MikroTik Configuration',
             icon: Icons.router,

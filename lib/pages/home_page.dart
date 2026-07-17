@@ -20,6 +20,8 @@ class _HomePageState extends State<HomePage> {
   int _qty = 10;
   String _packageName = '5 Jam 1000';
   String _profile = 'APLIKASI';
+  int _logoTapCount = 0;
+  DateTime? _lastTapTime;
 
   @override
   void initState() {
@@ -29,12 +31,8 @@ class _HomePageState extends State<HomePage> {
     _profileCtrl = TextEditingController(text: _profile);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final state = context.read<AppState>();
-      state.loadSettings().then((_) {
-        _profileCtrl.text = state.profile;
-        _profile = state.profile;
-        state.checkMikrotik();
-        state.checkSupabase();
-      });
+      _profileCtrl.text = state.profile;
+      _profile = state.profile;
     });
   }
 
@@ -55,35 +53,31 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         backgroundColor: const Color(0xFF7C3AED),
         foregroundColor: Colors.white,
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(8),
+        title: GestureDetector(
+          onTap: _onLogoTap,
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.confirmation_number, size: 20),
               ),
-              child: const Icon(Icons.confirmation_number, size: 20),
-            ),
-            const SizedBox(width: 12),
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('WiFiSekre', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                Text('Voucher Generator', style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal)),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const SettingsPage()),
-            ),
+              const SizedBox(width: 12),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('WiFiSekre', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text('Voucher Generator', style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal)),
+                ],
+              ),
+            ],
           ),
-          const SizedBox(width: 8),
+        ),
+        actions: const [
+          SizedBox(width: 8),
         ],
       ),
       body: SingleChildScrollView(
@@ -111,6 +105,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildStatusSection(AppState state) {
+    final bool allConnected = state.mtkConnected && state.supaConnected;
+    final bool anyDisconnected = !state.mtkConnected || !state.supaConnected;
+    
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -130,6 +127,28 @@ class _HomePageState extends State<HomePage> {
               Expanded(child: _buildStatusCard('Supabase', state.supaConnected, Icons.cloud_outlined)),
             ],
           ),
+          if (anyDisconnected) ...[
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.info_outline, color: Color(0xFFF59E0B), size: 20),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      anyDisconnected ? 'Connection issue detected. Contact admin if problem persists.' : 'All systems operational',
+                      style: const TextStyle(fontSize: 12, color: Colors.black87),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -586,6 +605,67 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _onLogoTap() {
+    final now = DateTime.now();
+    
+    if (_lastTapTime == null || now.difference(_lastTapTime!) > const Duration(seconds: 3)) {
+      _logoTapCount = 1;
+    } else {
+      _logoTapCount++;
+    }
+    
+    _lastTapTime = now;
+    
+    if (_logoTapCount >= 5) {
+      _logoTapCount = 0;
+      _showAdminPasswordDialog();
+    }
+  }
+
+  void _showAdminPasswordDialog() {
+    final passwordController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Admin Access'),
+        content: TextField(
+          controller: passwordController,
+          obscureText: true,
+          decoration: const InputDecoration(
+            labelText: 'Password',
+            hintText: 'Enter admin password',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              if (passwordController.text == 'admin123') {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SettingsPage()),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Incorrect password!'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            child: const Text('Login'),
+          ),
+        ],
       ),
     );
   }
