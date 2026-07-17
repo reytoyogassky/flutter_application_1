@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             children: [
               const Icon(Icons.error_outline, color: Colors.white),
               const SizedBox(width: 12),
-              const Text('Invalid access key!'),
+              const Text('Kunci akses salah!'),
             ],
           ),
           backgroundColor: const Color(0xFFEF4444),
@@ -126,7 +126,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Voucher Generator',
+                      'Generator Voucher',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey.shade400,
@@ -155,7 +155,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           const Text(
-                            'Enter Access Key',
+                            'Masukkan Kunci Akses',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -165,7 +165,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Please enter your access key to continue',
+                            'Masukkan kunci akses untuk melanjutkan',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey.shade400,
@@ -237,7 +237,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                         Icon(Icons.login, size: 20),
                                         SizedBox(width: 8),
                                         Text(
-                                          'Access System',
+                                          'Masuk Sistem',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -255,7 +255,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                     
                     // Footer
                     Text(
-                      'Secured Access System',
+                      'Sistem Akses Aman',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey.shade500,
@@ -268,7 +268,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                         Icon(Icons.shield, size: 16, color: Colors.grey.shade500),
                         const SizedBox(width: 6),
                         Text(
-                          'Protected by WiFiSekre.net',
+                          'Dilindungi oleh WiFiSekre.net',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey.shade500,

@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('WiFiSekre', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-                  Text('Voucher Generator', style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal, color: Colors.grey)),
+                  Text('Generator Voucher', style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal, color: Colors.grey)),
                 ],
               ),
             ],
@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
           ? FloatingActionButton.extended(
               onPressed: () => _showLogsBottomSheet(context, state),
               icon: const Icon(Icons.article_outlined),
-              label: const Text('View Logs'),
+              label: const Text('Lihat Log'),
               backgroundColor: const Color(0xFF8B5CF6),
               foregroundColor: Colors.white,
             )
@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsPage()));
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Incorrect password!'), backgroundColor: Colors.red),
+                  const SnackBar(content: Text('Password salah!'), backgroundColor: Colors.red),
                 );
               }
             },
@@ -186,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Connection issue detected. Contact admin if problem persists.',
+                      'Masalah koneksi terdeteksi. Hubungi admin jika masalah berlanjut.',
                       style: TextStyle(fontSize: 12, color: Colors.grey.shade300),
                     ),
                   ),
@@ -281,8 +281,8 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Generate Vouchers', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
-                      Text('Create multiple vouchers instantly', style: TextStyle(fontSize: 13, color: Colors.grey)),
+                      Text('Generate Voucher', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+                      Text('Buat banyak voucher secara instan', style: TextStyle(fontSize: 13, color: Colors.grey)),
                     ],
                   ),
                 ),
@@ -305,9 +305,9 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Connection Required', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEF4444), fontSize: 14)),
+                          const Text('Koneksi Diperlukan', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFEF4444), fontSize: 14)),
                           const SizedBox(height: 4),
-                          Text('Both MikroTik and Supabase must be connected to generate vouchers', style: TextStyle(fontSize: 12, color: Colors.grey.shade400)),
+                          Text('MikroTik dan Supabase harus terhubung untuk generate voucher', style: TextStyle(fontSize: 12, color: Colors.grey.shade400)),
                         ],
                       ),
                     ),
@@ -322,7 +322,7 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Row(children: [Text('Quantity', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)), SizedBox(width: 4), Text('*', style: TextStyle(color: Color(0xFFEF4444)))]),
+                      const Row(children: [Text('Jumlah', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)), SizedBox(width: 4), Text('*', style: TextStyle(color: Color(0xFFEF4444)))]),
                       const SizedBox(height: 10),
                       TextField(
                         controller: _qtyCtrl,
@@ -374,13 +374,13 @@ class _HomePageState extends State<HomePage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(children: [Text('Package Name', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)), SizedBox(width: 4), Text('*', style: TextStyle(color: Color(0xFFEF4444)))]),
+                const Row(children: [Text('Nama Paket', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)), SizedBox(width: 4), Text('*', style: TextStyle(color: Color(0xFFEF4444)))]),
                 const SizedBox(height: 10),
                 TextField(
                   controller: _pkgCtrl,
                   style: const TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
-                    hintText: 'e.g., 5 Jam 1000',
+                    hintText: 'cth: 5 Jam 1000',
                     hintStyle: TextStyle(color: Colors.grey),
                     prefixIcon: Icon(Icons.label_outline, size: 20, color: Color(0xFF8B5CF6)),
                   ),
@@ -392,7 +392,7 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               width: double.infinity, height: 56,
               child: FilledButton(
-                onPressed: (state.generating || !canGenerate) ? null : () => state.generate(qty: _qty, packageName: _packageName, profile: _profile),
+                onPressed: (state.generating || !canGenerate)                     ? null : () => state.generate(qty: _qty, packageName: _packageName, profile: _profile),
                 style: FilledButton.styleFrom(
                   backgroundColor: const Color(0xFF8B5CF6),
                   disabledBackgroundColor: const Color(0xFF334155),
@@ -440,9 +440,9 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Generation Results', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text('Hasil Generate', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                       SizedBox(height: 4),
-                      Text('vouchers created successfully', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                      Text('voucher berhasil dibuat', style: TextStyle(color: Colors.white70, fontSize: 12)),
                     ],
                   ),
                 ),
@@ -517,7 +517,7 @@ class _HomePageState extends State<HomePage> {
                             onPressed: () {
                               Clipboard.setData(ClipboardData(text: result.username));
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: const Row(children: [Icon(Icons.check_circle, color: Colors.white, size: 20), SizedBox(width: 12), Text('Username copied!')]),
+                                content: const Row(children: [Icon(Icons.check_circle, color: Colors.white, size: 20), SizedBox(width: 12), Text('Username disalin!')]),
                                 backgroundColor: const Color(0xFF10B981),
                                 behavior: SnackBarBehavior.floating,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -599,9 +599,9 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     const Icon(Icons.article, color: Color(0xFF8B5CF6)),
                     const SizedBox(width: 12),
-                    const Text('Generation Logs', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                    const Text('Log Generate', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                     const Spacer(),
-                    Text('${state.logs.length} entries', style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
+                    Text('${state.logs.length} entri', style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
                   ],
                 ),
               ),

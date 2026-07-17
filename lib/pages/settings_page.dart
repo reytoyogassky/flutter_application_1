@@ -71,7 +71,7 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             Icon(Icons.check_circle, color: Colors.white),
             SizedBox(width: 12),
-            Text('Settings saved successfully!'),
+            Text('Pengaturan berhasil disimpan!'),
           ],
         ),
         backgroundColor: const Color(0xFF10B981),
@@ -85,49 +85,49 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: const Color(0xFF0F172A),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: const Color(0xFF7C3AED),
+        backgroundColor: const Color(0xFF1E293B),
         foregroundColor: Colors.white,
-        title: const Text('Admin Settings', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Pengaturan Admin', style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFEF3C7),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFF59E0B)),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.warning_amber_rounded, color: Color(0xFFF59E0B)),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Admin Area',
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF92400E)),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'These settings are locked for regular users. Changes here will affect all app installations.',
-                        style: TextStyle(fontSize: 12, color: Colors.grey.shade800),
-                      ),
-                    ],
+              decoration: BoxDecoration(
+                color: const Color(0xFF713F12).withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.5)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.warning_amber_rounded, color: Color(0xFFF59E0B)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Area Admin',
+                          style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFFBBF24)),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Pengaturan ini terkunci untuk pengguna biasa. Perubahan akan memengaruhi semua instalasi aplikasi.',
+                          style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
           ),
           const SizedBox(height: 24),
           _buildSection(
-            title: 'MikroTik Configuration',
+            title: 'Konfigurasi MikroTik',
             icon: Icons.router,
             color: const Color(0xFF7C3AED),
             children: [
@@ -145,7 +145,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: ElevatedButton.icon(
                   onPressed: () => state.checkMikrotik(),
                   icon: Icon(state.mtkConnected ? Icons.check_circle : Icons.wifi_find, size: 20),
-                  label: Text(state.mtkConnected ? 'MikroTik Connected ✓' : 'Test Connection'),
+                  label: Text(state.mtkConnected ? 'MikroTik Terhubung ✓' : 'Uji Koneksi'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: state.mtkConnected ? const Color(0xFF10B981) : const Color(0xFF7C3AED),
                     foregroundColor: Colors.white,
@@ -157,21 +157,21 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           const SizedBox(height: 24),
           _buildSection(
-            title: 'Supabase Configuration',
+            title: 'Konfigurasi Supabase',
             icon: Icons.cloud_outlined,
             color: const Color(0xFF3B82F6),
             children: [
               const SizedBox(height: 16),
               _buildTextField('URL', _supaUrlCtrl, hint: 'https://xxx.supabase.co', icon: Icons.link),
               const SizedBox(height: 12),
-              _buildPasswordField('Service Role Key', _supaKeyCtrl, _showKey, () => setState(() => _showKey = !_showKey)),
+                  _buildPasswordField('Service Role Key', _supaKeyCtrl, _showKey, () => setState(() => _showKey = !_showKey)),
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () => state.checkSupabase(),
                   icon: Icon(state.supaConnected ? Icons.check_circle : Icons.cloud_sync, size: 20),
-                  label: Text(state.supaConnected ? 'Supabase Connected ✓' : 'Test Connection'),
+                  label: Text(state.supaConnected ? 'Supabase Terhubung ✓' : 'Uji Koneksi'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: state.supaConnected ? const Color(0xFF10B981) : const Color(0xFF3B82F6),
                     foregroundColor: Colors.white,
@@ -183,12 +183,12 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           const SizedBox(height: 24),
           _buildSection(
-            title: 'Default Settings',
+            title: 'Pengaturan Default',
             icon: Icons.tune,
             color: const Color(0xFF6B7280),
             children: [
               const SizedBox(height: 16),
-              _buildTextField('Default Profile', _profileCtrl, hint: 'APLIKASI', icon: Icons.badge_outlined),
+              _buildTextField('Profile Default', _profileCtrl, hint: 'APLIKASI', icon: Icons.badge_outlined),
             ],
           ),
           const SizedBox(height: 32),
@@ -198,7 +198,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: FilledButton.icon(
               onPressed: _save,
               icon: const Icon(Icons.save, size: 20),
-              label: const Text('Save Settings', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              label: const Text('Simpan Pengaturan', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFF7C3AED),
               ),
@@ -217,32 +217,35 @@ class _SettingsPageState extends State<SettingsPage> {
     required Color color,
     required List<Widget> children,
   }) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(icon, color: color, size: 20),
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E293B),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF334155)),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            ...children,
-          ],
-        ),
+                child: Icon(icon, color: color, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ],
+          ),
+          ...children,
+        ],
       ),
     );
   }
@@ -259,15 +262,17 @@ class _SettingsPageState extends State<SettingsPage> {
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey.shade700),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey.shade400),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
           keyboardType: keyboardType,
+          style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: hint,
-            prefixIcon: icon != null ? Icon(icon, size: 20) : null,
+            hintStyle: TextStyle(color: Colors.grey.shade600),
+            prefixIcon: icon != null ? Icon(icon, size: 20, color: const Color(0xFF8B5CF6)) : null,
           ),
         ),
       ],
@@ -285,17 +290,19 @@ class _SettingsPageState extends State<SettingsPage> {
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey.shade700),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey.shade400),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
           obscureText: !obscure,
+          style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: '••••••••••',
-            prefixIcon: const Icon(Icons.lock_outline, size: 20),
+            hintStyle: TextStyle(color: Colors.grey.shade600),
+            prefixIcon: const Icon(Icons.lock_outline, size: 20, color: Color(0xFF8B5CF6)),
             suffixIcon: IconButton(
-              icon: Icon(obscure ? Icons.visibility : Icons.visibility_off, size: 20),
+              icon: Icon(obscure ? Icons.visibility : Icons.visibility_off, size: 20, color: Colors.grey),
               onPressed: toggle,
             ),
           ),
@@ -305,36 +312,39 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildAboutSection() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF7C3AED).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(Icons.info_outline, color: Color(0xFF7C3AED), size: 20),
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E293B),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF334155)),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                const SizedBox(width: 12),
-                const Text(
-                  'About',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _buildAboutRow('Version', '1.0.0'),
-            const Divider(height: 20),
-            _buildAboutRow('Build', '2026.07.17'),
-            const Divider(height: 20),
-            _buildAboutRow('Developer', 'WiFiSekre.net'),
-          ],
-        ),
+                child: const Icon(Icons.info_outline, color: Color(0xFF8B5CF6), size: 20),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Tentang',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _buildAboutRow('Versi', '1.0.0'),
+          const Divider(height: 20, color: Color(0xFF334155)),
+          _buildAboutRow('Build', '2026.07.17'),
+          const Divider(height: 20, color: Color(0xFF334155)),
+          _buildAboutRow('Developer', 'WiFiSekre.net'),
+        ],
       ),
     );
   }
@@ -343,8 +353,8 @@ class _SettingsPageState extends State<SettingsPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
-        Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+        Text(label, style: TextStyle(fontSize: 14, color: Colors.grey.shade400)),
+        Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
       ],
     );
   }
