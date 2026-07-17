@@ -156,51 +156,87 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildStatusCard(String label, bool connected, IconData icon) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: connected 
+                ? const Color(0xFF10B981).withOpacity(0.2)
+                : Colors.red.withOpacity(0.2),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
           ),
         ],
+        border: Border.all(
+          color: connected 
+              ? const Color(0xFF10B981).withOpacity(0.3)
+              : Colors.red.withOpacity(0.3),
+          width: 2,
+        ),
       ),
       child: Column(
         children: [
-          Icon(icon, color: connected ? const Color(0xFF10B981) : Colors.grey, size: 28),
-          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: connected 
+                  ? const Color(0xFF10B981).withOpacity(0.1)
+                  : Colors.red.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: connected ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+              size: 32,
+            ),
+          ),
+          const SizedBox(height: 12),
           Text(
             label,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87),
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: connected ? const Color(0xFF10B981).withOpacity(0.1) : Colors.grey.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+              color: connected 
+                  ? const Color(0xFF10B981).withOpacity(0.15)
+                  : const Color(0xFFEF4444).withOpacity(0.15),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 6,
-                  height: 6,
+                  width: 8,
+                  height: 8,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: connected ? const Color(0xFF10B981) : Colors.grey,
+                    color: connected ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+                    boxShadow: [
+                      BoxShadow(
+                        color: connected 
+                            ? const Color(0xFF10B981).withOpacity(0.5)
+                            : const Color(0xFFEF4444).withOpacity(0.5),
+                        blurRadius: 8,
+                        spreadRadius: 2,
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  connected ? 'Connected' : 'Offline',
+                  connected ? 'Online' : 'Offline',
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: 11,
                     fontWeight: FontWeight.bold,
-                    color: connected ? const Color(0xFF10B981) : Colors.grey,
+                    color: connected ? const Color(0xFF047857) : const Color(0xFFDC2626),
                   ),
                 ),
               ],
@@ -212,50 +248,113 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildGeneratorCard(AppState state) {
+    final bool canGenerate = state.mtkConnected && state.supaConnected;
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Card(
+        elevation: 2,
+        shadowColor: Colors.black.withOpacity(0.1),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF7C3AED).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(10),
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF7C3AED), Color(0xFF6D28D9)],
+                      ),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Icons.add_circle_outline, color: Color(0xFF7C3AED), size: 20),
+                    child: const Icon(Icons.add_circle_outline, color: Colors.white, size: 24),
                   ),
-                  const SizedBox(width: 12),
-                  const Text(
-                    'Generate Vouchers',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  const SizedBox(width: 16),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Generate Vouchers',
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Create multiple vouchers instantly',
+                          style: TextStyle(fontSize: 13, color: Colors.grey),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
+              
+              // Warning if disconnected
+              if (!canGenerate) ...[
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFEF2F2),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFEF4444)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.warning_rounded, color: Color(0xFFEF4444), size: 24),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Connection Required',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFFDC2626),
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Both MikroTik and Supabase must be connected to generate vouchers',
+                              style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+              
               Row(
                 children: [
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Quantity',
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey.shade700),
+                        Row(
+                          children: [
+                            const Text(
+                              'Quantity',
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF374151)),
+                            ),
+                            const SizedBox(width: 4),
+                            const Text('*', style: TextStyle(color: Color(0xFFEF4444))),
+                          ],
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 10),
                         DropdownButtonFormField<int>(
                           value: _qty,
                           decoration: const InputDecoration(
                             prefixIcon: Icon(Icons.format_list_numbered, size: 20),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                           ),
-                          items: [5, 10, 25, 50, 100, 200].map((qty) {
+                          items: [5, 10, 25, 50, 100, 200, 500].map((qty) {
                             return DropdownMenuItem(value: qty, child: Text('$qty vouchers'));
                           }).toList(),
                           onChanged: (val) {
@@ -268,21 +367,27 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Profile',
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey.shade700),
+                        Row(
+                          children: [
+                            const Text(
+                              'Profile',
+                              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF374151)),
+                            ),
+                            const SizedBox(width: 4),
+                            const Text('*', style: TextStyle(color: Color(0xFFEF4444))),
+                          ],
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 10),
                         DropdownButtonFormField<String>(
                           value: state.availableProfiles.contains(_profile) ? _profile : state.availableProfiles.first,
                           decoration: const InputDecoration(
                             prefixIcon: Icon(Icons.badge_outlined, size: 20),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                           ),
                           items: state.availableProfiles.map((prof) {
                             return DropdownMenuItem(value: prof, child: Text(prof));
@@ -299,26 +404,37 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              Text(
-                'Package Name',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey.shade700),
+              const SizedBox(height: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Text(
+                        'Package Name',
+                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF374151)),
+                      ),
+                      const SizedBox(width: 4),
+                      const Text('*', style: TextStyle(color: Color(0xFFEF4444))),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: _pkgCtrl,
+                    decoration: const InputDecoration(
+                      hintText: 'e.g., 5 Jam 1000',
+                      prefixIcon: Icon(Icons.label_outline, size: 20),
+                    ),
+                    onChanged: (v) => _packageName = v,
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _pkgCtrl,
-                decoration: const InputDecoration(
-                  hintText: 'e.g., 5 Jam 1000',
-                  prefixIcon: Icon(Icons.label_outline, size: 20),
-                ),
-                onChanged: (v) => _packageName = v,
-              ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 28),
               SizedBox(
                 width: double.infinity,
-                height: 54,
+                height: 56,
                 child: FilledButton(
-                  onPressed: state.generating
+                  onPressed: (state.generating || !canGenerate)
                       ? null
                       : () => state.generate(
                             qty: _qty,
@@ -328,26 +444,30 @@ class _HomePageState extends State<HomePage> {
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFF7C3AED),
                     disabledBackgroundColor: Colors.grey.shade300,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   ),
                   child: state.generating
                       ? const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white),
                             ),
-                            SizedBox(width: 12),
+                            SizedBox(width: 14),
                             Text('Generating...', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                           ],
                         )
-                      : const Row(
+                      : Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.rocket_launch, size: 20),
-                            SizedBox(width: 8),
-                            Text('GENERATE & SYNC', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            const Icon(Icons.rocket_launch, size: 22),
+                            const SizedBox(width: 10),
+                            Text(
+                              canGenerate ? 'GENERATE & SYNC' : 'CONNECTION REQUIRED',
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                            ),
                           ],
                         ),
                 ),
@@ -362,44 +482,89 @@ class _HomePageState extends State<HomePage> {
   Widget _buildResultsSection(AppState state) {
     final successCount = state.results.where((r) => r.mikrotikOk && r.supabaseOk).length;
     final totalCount = state.results.length;
+    final successRate = totalCount > 0 ? (successCount / totalCount * 100).toStringAsFixed(0) : '0';
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF10B981).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.check_circle_outline, color: Color(0xFF10B981), size: 20),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: successCount == totalCount
+                    ? [const Color(0xFF10B981), const Color(0xFF059669)]
+                    : [const Color(0xFFF59E0B), const Color(0xFFD97706)],
               ),
-              const SizedBox(width: 12),
-              const Text('Results', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: successCount == totalCount ? const Color(0xFF10B981) : const Color(0xFFF59E0B),
-                  borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: (successCount == totalCount ? const Color(0xFF10B981) : const Color(0xFFF59E0B))
+                      .withOpacity(0.3),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
                 ),
-                child: Text(
-                  '$successCount/$totalCount Success',
-                  style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.check_circle_outline, color: Colors.white, size: 28),
                 ),
-              ),
-            ],
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Generation Results',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '$successCount of $totalCount vouchers created successfully',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    '$successRate%',
+                    style: TextStyle(
+                      color: successCount == totalCount ? const Color(0xFF059669) : const Color(0xFFD97706),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
           ListView.separated(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: state.results.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
+            separatorBuilder: (_, __) => const SizedBox(height: 10),
             itemBuilder: (_, i) {
               final r = state.results[i];
               return _buildResultCard(r);
@@ -412,7 +577,28 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildResultCard(VoucherResult result) {
     final isSuccess = result.mikrotikOk && result.supabaseOk;
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isSuccess
+              ? [Colors.white, const Color(0xFFF0FDF4)]
+              : [Colors.white, const Color(0xFFFEF2F2)],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isSuccess ? const Color(0xFF10B981).withOpacity(0.3) : const Color(0xFFEF4444).withOpacity(0.3),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: (isSuccess ? const Color(0xFF10B981) : const Color(0xFFEF4444)).withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -421,66 +607,114 @@ class _HomePageState extends State<HomePage> {
             Row(
               children: [
                 Container(
-                  width: 32,
-                  height: 32,
+                  width: 40,
+                  height: 40,
                   decoration: BoxDecoration(
-                    color: isSuccess ? const Color(0xFF10B981).withOpacity(0.1) : const Color(0xFFEF4444).withOpacity(0.1),
+                    gradient: LinearGradient(
+                      colors: isSuccess
+                          ? [const Color(0xFF10B981), const Color(0xFF059669)]
+                          : [const Color(0xFFEF4444), const Color(0xFFDC2626)],
+                    ),
                     shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: (isSuccess ? const Color(0xFF10B981) : const Color(0xFFEF4444)).withOpacity(0.4),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: Center(
                     child: Text(
-                      '${result.index}',
-                      style: TextStyle(
+                      '#${result.index}',
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: isSuccess ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+                        color: Colors.white,
                         fontSize: 14,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 14),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          Text(
-                            result.username,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, fontFamily: 'monospace'),
+                          Expanded(
+                            child: Text(
+                              result.username,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                fontFamily: 'monospace',
+                                letterSpacing: 0.5,
+                              ),
+                            ),
                           ),
-                          const SizedBox(width: 8),
-                          IconButton(
-                            icon: const Icon(Icons.copy, size: 16),
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                            onPressed: () {
-                              Clipboard.setData(ClipboardData(text: result.username));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Username copied!'),
-                                  duration: Duration(seconds: 1),
-                                ),
-                              );
-                            },
+                          Container(
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF7C3AED).withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: IconButton(
+                              icon: const Icon(Icons.copy, size: 18, color: Color(0xFF7C3AED)),
+                              padding: const EdgeInsets.all(8),
+                              constraints: const BoxConstraints(),
+                              onPressed: () {
+                                Clipboard.setData(ClipboardData(text: result.username));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Row(
+                                      children: [
+                                        const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                                        const SizedBox(width: 12),
+                                        const Text('Username copied to clipboard!'),
+                                      ],
+                                    ),
+                                    backgroundColor: const Color(0xFF10B981),
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                    duration: const Duration(seconds: 2),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        result.message,
-                        style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          Icon(
+                            isSuccess ? Icons.check_circle : Icons.error,
+                            size: 14,
+                            color: isSuccess ? const Color(0xFF059669) : const Color(0xFFDC2626),
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              result.message,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    _buildStatusBadge('MT', result.mikrotikOk),
-                    const SizedBox(width: 6),
-                    _buildStatusBadge('DB', result.supabaseOk),
-                  ],
-                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(child: _buildStatusBadge('MikroTik', result.mikrotikOk)),
+                const SizedBox(width: 8),
+                Expanded(child: _buildStatusBadge('Supabase', result.supabaseOk)),
               ],
             ),
           ],
@@ -491,30 +725,37 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildStatusBadge(String label, bool ok) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: ok ? const Color(0xFF10B981).withOpacity(0.1) : const Color(0xFFEF4444).withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: ok ? const Color(0xFF10B981) : const Color(0xFFEF4444),
-          width: 1,
+        gradient: LinearGradient(
+          colors: ok
+              ? [const Color(0xFF10B981), const Color(0xFF059669)]
+              : [const Color(0xFFEF4444), const Color(0xFFDC2626)],
         ),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: (ok ? const Color(0xFF10B981) : const Color(0xFFEF4444)).withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
             ok ? Icons.check_circle : Icons.cancel,
-            size: 12,
-            color: ok ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+            size: 16,
+            color: Colors.white,
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 6),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 10,
+            style: const TextStyle(
+              fontSize: 11,
               fontWeight: FontWeight.bold,
-              color: ok ? const Color(0xFF10B981) : const Color(0xFFEF4444),
+              color: Colors.white,
             ),
           ),
         ],
