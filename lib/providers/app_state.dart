@@ -10,9 +10,9 @@ class AppState extends ChangeNotifier {
   String _mikrotikHost = '11.11.11.1';
   int _mikrotikPort = 8728;
   String _mikrotikUser = 'superadmin';
-  String _mikrotikPass = '';
-  String _supabaseUrl = '';
-  String _supabaseKey = '';
+  String _mikrotikPass = 'admin';
+  String _supabaseUrl = 'https://ikyzdwccwebmxkztwglg.supabase.co';
+  String _supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlreXpkd2Njd2VibXhrenR3Z2xnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3Mjg1ODM1NywiZXhwIjoyMDg4NDM0MzU3fQ.lrUCSS9-B4uAHiMNkIUQ26Eszf-wtcaKRPlT1jcNxHQ';
   String _defaultProfile = 'APLIKASI';
 
   // State

@@ -66,7 +66,18 @@ class _SettingsPageState extends State<SettingsPage> {
       profile: _profileCtrl.text.trim(),
     );
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Settings saved'), backgroundColor: Colors.green),
+      SnackBar(
+        content: const Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.white),
+            SizedBox(width: 12),
+            Text('Settings saved successfully!'),
+          ],
+        ),
+        backgroundColor: const Color(0xFF10B981),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
     );
   }
 
@@ -74,102 +85,236 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      backgroundColor: Colors.grey.shade50,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: const Color(0xFF7C3AED),
+        foregroundColor: Colors.white,
+        title: const Text('Settings', style: TextStyle(fontWeight: FontWeight.bold)),
+      ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         children: [
-          _section('MIKROTIK'),
-          const SizedBox(height: 8),
-          _field('Host', _hostCtrl, hint: '11.11.11.1'),
-          _field('Port', _portCtrl, hint: '8728', keyboardType: TextInputType.number),
-          _field('Username', _userCtrl, hint: 'superadmin'),
-          _passwordField('Password', _passCtrl, _showPass, () => setState(() => _showPass = !_showPass)),
-          const SizedBox(height: 8),
-          ElevatedButton.icon(
-            onPressed: () => state.checkMikrotik(),
-            icon: Icon(state.mtkConnected ? Icons.check_circle : Icons.wifi, color: Colors.white),
-            label: Text(state.mtkConnected ? 'MikroTik Connected' : 'Test Connection'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: state.mtkConnected ? Colors.green : Colors.indigo,
-              foregroundColor: Colors.white,
+          _buildSection(
+            title: 'MikroTik Configuration',
+            icon: Icons.router,
+            color: const Color(0xFF7C3AED),
+            children: [
+              const SizedBox(height: 16),
+              _buildTextField('Host', _hostCtrl, hint: '11.11.11.1', icon: Icons.dns),
+              const SizedBox(height: 12),
+              _buildTextField('Port', _portCtrl, hint: '8728', icon: Icons.settings_ethernet, keyboardType: TextInputType.number),
+              const SizedBox(height: 12),
+              _buildTextField('Username', _userCtrl, hint: 'superadmin', icon: Icons.person_outline),
+              const SizedBox(height: 12),
+              _buildPasswordField('Password', _passCtrl, _showPass, () => setState(() => _showPass = !_showPass)),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => state.checkMikrotik(),
+                  icon: Icon(state.mtkConnected ? Icons.check_circle : Icons.wifi_find, size: 20),
+                  label: Text(state.mtkConnected ? 'MikroTik Connected ✓' : 'Test Connection'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: state.mtkConnected ? const Color(0xFF10B981) : const Color(0xFF7C3AED),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          _buildSection(
+            title: 'Supabase Configuration',
+            icon: Icons.cloud_outlined,
+            color: const Color(0xFF3B82F6),
+            children: [
+              const SizedBox(height: 16),
+              _buildTextField('URL', _supaUrlCtrl, hint: 'https://xxx.supabase.co', icon: Icons.link),
+              const SizedBox(height: 12),
+              _buildPasswordField('Service Role Key', _supaKeyCtrl, _showKey, () => setState(() => _showKey = !_showKey)),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => state.checkSupabase(),
+                  icon: Icon(state.supaConnected ? Icons.check_circle : Icons.cloud_sync, size: 20),
+                  label: Text(state.supaConnected ? 'Supabase Connected ✓' : 'Test Connection'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: state.supaConnected ? const Color(0xFF10B981) : const Color(0xFF3B82F6),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          _buildSection(
+            title: 'Default Settings',
+            icon: Icons.tune,
+            color: const Color(0xFF6B7280),
+            children: [
+              const SizedBox(height: 16),
+              _buildTextField('Default Profile', _profileCtrl, hint: 'APLIKASI', icon: Icons.badge_outlined),
+            ],
+          ),
+          const SizedBox(height: 32),
+          SizedBox(
+            width: double.infinity,
+            height: 54,
+            child: FilledButton.icon(
+              onPressed: _save,
+              icon: const Icon(Icons.save, size: 20),
+              label: const Text('Save Settings', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFF7C3AED),
+              ),
             ),
           ),
-          const SizedBox(height: 24),
-
-          _section('SUPABASE'),
-          const SizedBox(height: 8),
-          _field('URL', _supaUrlCtrl, hint: 'https://xxx.supabase.co'),
-          _passwordField('Service Role Key', _supaKeyCtrl, _showKey, () => setState(() => _showKey = !_showKey)),
-          const SizedBox(height: 8),
-          ElevatedButton.icon(
-            onPressed: () => state.checkSupabase(),
-            icon: Icon(state.supaConnected ? Icons.check_circle : Icons.cloud, color: Colors.white),
-            label: Text(state.supaConnected ? 'Supabase Connected' : 'Test Connection'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: state.supaConnected ? Colors.green : Colors.blue,
-              foregroundColor: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          _section('DEFAULT'),
-          const SizedBox(height: 8),
-          _field('Profile', _profileCtrl, hint: 'APLIKASI'),
-          const SizedBox(height: 24),
-
-          FilledButton.icon(
-            onPressed: _save,
-            icon: const Icon(Icons.save),
-            label: const Text('Save Settings'),
-            style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(48)),
-          ),
+          const SizedBox(height: 40),
+          _buildAboutSection(),
         ],
       ),
     );
   }
 
-  Widget _section(String title) {
-    return Text(title, style: TextStyle(
-      fontSize: 13, fontWeight: FontWeight.bold,
-      color: Theme.of(context).colorScheme.primary,
-      letterSpacing: 1,
-    ));
-  }
-
-  Widget _field(String label, TextEditingController ctrl,
-      {String? hint, TextInputType? keyboardType}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: TextField(
-        controller: ctrl,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          labelText: label,
-          hintText: hint,
-          border: const OutlineInputBorder(),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+  Widget _buildSection({
+    required String title,
+    required IconData icon,
+    required Color color,
+    required List<Widget> children,
+  }) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(icon, color: color, size: 20),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  title,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            ...children,
+          ],
         ),
       ),
     );
   }
 
-  Widget _passwordField(String label, TextEditingController ctrl,
-      bool obscure, VoidCallback toggle) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: TextField(
-        controller: ctrl,
-        obscureText: !obscure,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-          suffixIcon: IconButton(
-            icon: Icon(obscure ? Icons.visibility_off : Icons.visibility),
-            onPressed: toggle,
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    String? hint,
+    IconData? icon,
+    TextInputType? keyboardType,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey.shade700),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          keyboardType: keyboardType,
+          decoration: InputDecoration(
+            hintText: hint,
+            prefixIcon: icon != null ? Icon(icon, size: 20) : null,
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildPasswordField(
+    String label,
+    TextEditingController controller,
+    bool obscure,
+    VoidCallback toggle,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey.shade700),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: controller,
+          obscureText: !obscure,
+          decoration: InputDecoration(
+            hintText: '••••••••••',
+            prefixIcon: const Icon(Icons.lock_outline, size: 20),
+            suffixIcon: IconButton(
+              icon: Icon(obscure ? Icons.visibility : Icons.visibility_off, size: 20),
+              onPressed: toggle,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAboutSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF7C3AED).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(Icons.info_outline, color: Color(0xFF7C3AED), size: 20),
+                ),
+                const SizedBox(width: 12),
+                const Text(
+                  'About',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            _buildAboutRow('Version', '1.0.0'),
+            const Divider(height: 20),
+            _buildAboutRow('Build', '2026.07.17'),
+            const Divider(height: 20),
+            _buildAboutRow('Developer', 'WiFiSekre.net'),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildAboutRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: TextStyle(fontSize: 14, color: Colors.grey.shade600)),
+        Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+      ],
     );
   }
 }
