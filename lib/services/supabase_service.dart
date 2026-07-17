@@ -48,10 +48,10 @@ class SupabaseClient {
   Future<bool> ping() async {
     try {
       final resp = await http.get(
-        Uri.parse('$url/rest/v1/'),
+        Uri.parse('$url/rest/v1/vouchers?select=id&limit=1'),
         headers: {'apikey': serviceKey, 'Authorization': 'Bearer $serviceKey'},
       );
-      return resp.statusCode == 200;
+      return resp.statusCode == 200 || resp.statusCode == 404;
     } catch (_) {
       return false;
     }
